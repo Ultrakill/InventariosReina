@@ -462,9 +462,9 @@ public class MantenimientoBien extends javax.swing.JInternalFrame {
             try {
                 nombreField.setText(BeanUtils.getProperty(bien, "nombre"));
                 descripcionField.setText(BeanUtils.getProperty(bien, "descripcion"));
-                fotoField.setText(BeanUtils.getProperty(bien, "foto"));
-
-                ImageIcon fot = new ImageIcon(fotoField.getText());
+                File fotito = new File(BeanUtils.getProperty(bien, "foto"));
+                fotoField.setText(fotito.getAbsolutePath());
+                ImageIcon fot = new ImageIcon(fotito.getAbsolutePath());
                 Icon icono = new ImageIcon(fot.getImage().getScaledInstance(fotoLbl.getWidth(), fotoLbl.getHeight(), Image.SCALE_DEFAULT));
                 fotoLbl.setIcon(icono);
 

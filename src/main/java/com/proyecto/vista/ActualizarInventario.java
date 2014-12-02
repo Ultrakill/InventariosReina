@@ -20,6 +20,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -653,6 +654,7 @@ public class ActualizarInventario extends javax.swing.JInternalFrame {
 //            JOptionPane.showMessageDialog(null, "Debe seleccionar una clase", "Mensaje del Sistema", JOptionPane.ERROR_MESSAGE);
 //        }
     }//GEN-LAST:event_btneliminarActionPerformed
+    private static final Logger LOG = Logger.getLogger(ActualizarInventario.class.getName());
 
     private void btnguardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnguardarActionPerformed
         // TODO add your handling code here:
@@ -662,7 +664,7 @@ public class ActualizarInventario extends javax.swing.JInternalFrame {
             palabra = "registrar";
             palabra2 = "registrado";
 
-            if (JOptionPane.showConfirmDialog(null, "¿Desea " + palabra + " la Clase?", "Mensaje del Sistema", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            if (JOptionPane.showConfirmDialog(null, "¿Desea " + palabra + " el inventario?", "Mensaje del Sistema", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 
 //                inventarioControlador.getSeleccionado().setAmbiente((Ambiente) cmbAmbientes.getSelectedItem());
 //                inventarioControlador.getSeleccionado().setEstado(cmbEstado.getSelectedItem().toString());
@@ -677,8 +679,8 @@ public class ActualizarInventario extends javax.swing.JInternalFrame {
 
                 System.out.println("CANTIDAD: " + cantidad);
                 for (int i = 0; i < cantidad; i++) {
-                    List<Inventario> conteo = inventarioControlador.buscarXBien2(bienGlobal);
-                    int contar = conteo.size();
+//                    List<Inventario> conteo = inventarioControlador.buscarXBien2(bienGlobal);
+                    int contar = inventarioControlador.siguienteNumero(bienGlobal.getClase());
 
                     Inventario inventarioFinal = new Inventario();
                     inventarioFinal.setAmbiente((Ambiente) cmbAmbientes.getSelectedItem());
@@ -688,7 +690,7 @@ public class ActualizarInventario extends javax.swing.JInternalFrame {
                     inventarioFinal.setProveedor(inventarioControlador.getSeleccionado().getProveedor());
                     inventarioFinal.setBien(bienGlobal);
 
-                    String suma = 1000000 + contar + 1 +"";
+                    String suma = 1000000 + contar +"";
                     String serie = suma.substring(1, suma.length());
 
                     inventarioFinal.setSerie(serie);
@@ -721,7 +723,12 @@ public class ActualizarInventario extends javax.swing.JInternalFrame {
                 if (accion == 2) {
                     JOptionPane.showMessageDialog(null, "Clase " + palabra2 + " correctamente", "Mensaje del Sistema", JOptionPane.INFORMATION_MESSAGE);
 
-                    lista.clear();
+//                    lista.clear();
+                    if(inventarioControlador.getSeleccionado() == null){
+                        LOG.info("ES NULL EL SELECCIONADO");
+                    }else{
+                        LOG.info("NO ES NULL EL SELECCIONADO");
+                    }
                     inventarioControlador.getSeleccionado().setAmbiente((Ambiente) cmbAmbientes.getSelectedItem());
 //                inventarioControlador.getSeleccionado().setBien(null);
                     inventarioControlador.getSeleccionado().setEstado(cmbEstado.getSelectedItem().toString());
@@ -927,6 +934,7 @@ public class ActualizarInventario extends javax.swing.JInternalFrame {
 //        }
 //        cmblazy.setModel(modeloCombo);
 //    }
+    
     private void cargarComboAmbientes() {
         AmbienteControlador ambienteC = new AmbienteControlador();
         List<Ambiente> ambientes = ambienteC.buscarTodos();
@@ -952,6 +960,7 @@ public class ActualizarInventario extends javax.swing.JInternalFrame {
 
     private void buscar() {
         accion = AbstractControlador.MODIFICAR;
+        cargarCombos();
 
         FormularioUtil.activarComponente(panelDatos, true);
         FormularioUtil.activarComponente(panelDatosB, true);
@@ -994,6 +1003,8 @@ public class ActualizarInventario extends javax.swing.JInternalFrame {
             spnPrecio.setValue(inventario.getPrecio());
             serieField.setText(inventario.getSerie());
             serieField.setEditable(false);
+            
+            inventarioControlador.setSeleccionado(inventario);
 
             listaB.clear();
         }
